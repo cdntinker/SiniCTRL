@@ -14,7 +14,7 @@ It seems to work.
 
 It's hard coded to work on MY network with MY SiniLinks...
 
-(My SiniLinks run [firmware](WIP-IoT-Smart_Switch) that acts much like TasmOTA as far as MQTT goes.)
+(My SiniLinks run [firmware](https://github.com/cdntinker/WIP-IoT-Smart_Switch) that acts much like TasmOTA as far as MQTT goes.)
 
 meh...
 
