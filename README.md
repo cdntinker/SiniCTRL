@@ -10,6 +10,8 @@ It seems to work.
 
 It's hard coded to work on MY network with MY SiniLinks...
 
+(My SiniLinks run firmware that acts much like TasmOTA as far as MQTT goes.)
+
 meh...
 
 # To Be Done
