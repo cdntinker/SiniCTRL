@@ -1,3 +1,7 @@
+An attempt at creating a desktop application to replace a Nodr-Red dashboard group.
+
+Just because putting a small control set on the desktop really shouldn't require firing up yet another web browser window.
+
 # Yes, I know this is the fugliest code ever seen.
 
 Just as a starting point, I've never been much good with UI programming.
