@@ -7,6 +7,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 import paho.mqtt.client as mqtt 
+import random
 
 #------------------------------------------------------------------------------
 # The Window!
@@ -129,8 +130,14 @@ class TOGGLE_WINDOW:
 
 mqttBroker ="Skynet"                            # Specific to MY network
 
-client = mqtt.Client("SiniLink_Controls2")      # This needs to be randomized to some extent...
+client_id = f'SiniLink_Controls-{random.randint(0, 1000)}'
+# This needs to be randomized if you might run more than one instance...
+
+client = mqtt.Client(client_id)
+
 client.connect(mqttBroker) 
+
+print(client_id, "is connected to", mqttBroker)
 
 #--------------------------------------
 # Specific to MY network
