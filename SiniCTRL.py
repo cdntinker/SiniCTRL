@@ -7,7 +7,85 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 import paho.mqtt.client as mqtt 
-import random
+
+import time
+
+# import random
+# import sys
+
+# print("Using ",sys.executable)
+
+#------------------------------------------------------------------------------
+# MQTT Stuffz
+#------------------------------------------------------------------------------
+
+#--------------------------------------
+# Specific to MY network
+# These are MY SiniLink USB switches
+#--------------------------------------
+mqttBroker ="Skynet"
+Device0 = "stat/Sinilink_0/Power"
+Device1 = "stat/Sinilink_1/Power00"
+Device2 = "stat/Sinilink_2/Power"
+Device3 = "stat/Sinilink_3/Power"
+
+client_id = f'SiniLink_Controls-{time.time()}'
+# This needs to be randomized if you might run more than one instance...
+# I'm actually using "seconds since epoc" as a differentiator.
+# Of course, it'd be even better to figure out how to actually confirm that
+# there isn't already a device with this exact name connected to the broker.
+
+lwt_topic = "LWT/"+client_id
+#--------------------------------------
+
+def on_connect(client, userdata, flags, rc):
+    if rc==0:
+        print("connected OK Returned code=",rc)
+        print(client_id, "is connected to", mqttBroker)
+        #--------------------------------------
+        client.subscribe([
+            (Device0,0),
+            (Device1,0),
+            (Device2,0),
+            (Device3,0),
+            ])
+        print('Subscribed to:\n\t{:s}\n\t{:s}\n\t{:s}\n\t{:s}'.format(Device0, Device1, Device2, Device3))
+        #--------------------------------------
+
+    else:
+        print("Bad connection Returned code=",rc)
+
+client = mqtt.Client(client_id)
+client.will_set(lwt_topic, payload="(I B ded)")
+
+client.on_connect=on_connect  #bind call back function
+
+client.connect(mqttBroker) 
+
+def on_message(client, userdata, message):
+    #--------------------------------------
+    # Yet ANOTHER truly FUGLY part...
+    #--------------------------------------
+    global State_0, State_1, State_2, State_3
+
+    print("  topic:", message.topic)
+    print("message:", str(message.payload.decode("utf-8")))
+
+    if(message.topic == "stat/Sinilink_0/Power"):
+        State_0 = str(message.payload.decode("utf-8"))
+        print("MoFo! 0 " + State_0)
+    if(message.topic == "stat/Sinilink_1/Power00"):
+        State_1 = str(message.payload.decode("utf-8"))
+        print("MoFo! 1 " + State_1)
+    if(message.topic == "stat/Sinilink_2/Power"):
+        State_2 = str(message.payload.decode("utf-8"))
+        print("MoFo! 2 " + State_2)
+    if(message.topic == "stat/Sinilink_3/Power"):
+        State_3 = str(message.payload.decode("utf-8"))
+        print("MoFo! 3 " + State_3)
+    #--------------------------------------
+
+client.on_message=on_message        #attach function to callback
 
 #------------------------------------------------------------------------------
 # The Window!
@@ -125,67 +203,10 @@ class TOGGLE_WINDOW:
         Gtk.main()
 
 #------------------------------------------------------------------------------
-# MQTT Stuffz
-#------------------------------------------------------------------------------
-
-mqttBroker ="Skynet"                            # Specific to MY network
-
-client_id = f'SiniLink_Controls-{random.randint(0, 1000)}'
-# This needs to be randomized if you might run more than one instance...
-
-client = mqtt.Client(client_id)
-
-client.connect(mqttBroker) 
-
-print(client_id, "is connected to", mqttBroker)
-
-#--------------------------------------
-# Specific to MY network
-# These are MY SiniLink USB switches
-#--------------------------------------
-client.subscribe("stat/Sinilink_0/Power")
-print("Subscribed: stat/Sinilink_0/Power")
-
-client.subscribe("stat/Sinilink_1/Power00")
-print("Subscribed: stat/Sinilink_1/Power00")
-
-client.subscribe("stat/Sinilink_2/Power")
-print("Subscribed: stat/Sinilink_2/Power")
-
-client.subscribe("stat/Sinilink_3/Power")
-print("Subscribed: stat/Sinilink_3/Power")
-#--------------------------------------
-
-def on_message(client, userdata, message):
-    #--------------------------------------
-    # Yet ANOTHER truly FUGLY part...
-    #--------------------------------------
-    global State_0, State_1, State_2, State_3
-
-    print("  topic:", message.topic)
-    print("message:", str(message.payload.decode("utf-8")))
-
-    if(message.topic == "stat/Sinilink_0/Power"):
-        State_0 = str(message.payload.decode("utf-8"))
-        print("MoFo! 0 " + State_0)
-    if(message.topic == "stat/Sinilink_1/Power00"):
-        State_1 = str(message.payload.decode("utf-8"))
-        print("MoFo! 1 " + State_1)
-    if(message.topic == "stat/Sinilink_2/Power"):
-        State_2 = str(message.payload.decode("utf-8"))
-        print("MoFo! 2 " + State_2)
-    if(message.topic == "stat/Sinilink_3/Power"):
-        State_3 = str(message.payload.decode("utf-8"))
-        print("MoFo! 3 " + State_3)
-    #--------------------------------------
-
-client.on_message=on_message        #attach function to callback
-
-client.loop_start() #start the loop
-
-#------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
 if __name__=='__main__':
+    client.connect(mqttBroker) 
+    client.loop_start() #start the loop
     run = TOGGLE_WINDOW()
     run.main()
