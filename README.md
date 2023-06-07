@@ -12,7 +12,7 @@ To make it worse, I have absolutely no experience with Python.
 
 It seems to work.
 
-It's hard coded to work on MY network with MY SiniLinks... (Tho, now the "hard coding" is almost entirely in easily found variables now.)
+It's hard coded to work on MY network with MY SiniLinks... (Tho, the "hard coding" is almost entirely in easily found variables now.)
 
 (My SiniLinks run [firmware](https://github.com/cdntinker/WIP-IoT-Smart_Switch) that acts much like TasmOTA as far as MQTT goes.)
 
