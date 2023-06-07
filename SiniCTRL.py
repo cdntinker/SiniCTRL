@@ -10,11 +10,6 @@ import paho.mqtt.client as mqtt
 
 import time
 
-# import random
-# import sys
-
-# print("Using ",sys.executable)
-
 #------------------------------------------------------------------------------
 # MQTT Stuffz
 #------------------------------------------------------------------------------
@@ -33,14 +28,14 @@ Device_2 = "SiniLink_2"
 Device_3 = "SiniLink_3"
 
 Part_0 = "Power"
-Part_1 = "Power00"
+Part_1 = "Power00"      # This one's different because it's a newer version of the firmware
 Part_2 = "Power"
 Part_3 = "Power"
 
-State_0 = ""
-State_1 = ""
-State_2 = ""
-State_3 = ""
+State_0 = "wtf"
+State_1 = "wtf"
+State_2 = "wtf"
+State_3 = "wtf"
 
 client_id = f'SiniLink_Controls-{time.time()}'
 # This needs to be made unique if you might run more than one instance...
@@ -68,12 +63,12 @@ def on_connect(client, userdata, flags, rc):
             Device_2+" - "+Part_2, 
             Device_3+" - "+Part_3
             ))
-        #######################################
+        ######################################################
         client.publish("cmnd/"+Device_0+"/"+"Status", "Power")
         client.publish("cmnd/"+Device_1+"/"+"Status", "Power")
         client.publish("cmnd/"+Device_2+"/"+"Status", "Power")
         client.publish("cmnd/"+Device_3+"/"+"Status", "Power")
-        #######################################
+        ######################################################
 
         #--------------------------------------
     else:
@@ -92,6 +87,9 @@ def on_message(client, userdata, message):
     print("  topic:", message.topic)
     print("message:", str(message.payload.decode("utf-8")))
 
+# These work for my firmware... Not so much for tasmota as it responds
+# with a full JSON payload
+# Might have to work on that once it's doing what I want for these devices
     if(message.topic == "stat/"+Device_0+"/"+Part_0):
         State_0 = str(message.payload.decode("utf-8"))
     if(message.topic == "stat/"+Device_1+"/"+Part_1):
@@ -134,7 +132,7 @@ class TOGGLE_WINDOW:
     #--------------------------------------
     def __init__(self):
 
-        #######################################
+        ######################################################
         global State_0
         global State_1
         global State_2
@@ -154,7 +152,7 @@ class TOGGLE_WINDOW:
         Label_3 = Device_3+' - '+State_3
 
         print(Label_0, Label_1, Label_2, Label_3)
-        #######################################
+        ######################################################
 
         TheWindow = Gtk.Window()
         TheWindow.set_position(Gtk.WindowPosition.CENTER)
@@ -165,8 +163,8 @@ class TOGGLE_WINDOW:
         #--------------------------------------
         # One of the truly FUGLY parts...
         # Should figure out how to turn it into
-        # a loop.  Maybe build up a set of
-        # variables to define the devices
+        # a loop.  Maybe build up an array or
+        # structure to define the devices
         #--------------------------------------
         self.toggle0 = Gtk.ToggleButton(label = Device_0+' - '+State_0)
         self.toggle0.connect('toggled', self.on_toggled0, 'toggle')
@@ -203,6 +201,11 @@ class TOGGLE_WINDOW:
     # There is probably a way to define a
     # single 'on_toggle()' & tell it which
     # device is being toggled.
+    #
+    # Of course, Life will be better
+    # if/when I figure out how to handle
+    # the "State" information returned from
+    # the devices
     #--------------------------------------
     def on_toggled0(self, event, widget):
         state = self.toggle0.get_active()
