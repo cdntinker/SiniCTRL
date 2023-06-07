@@ -60,7 +60,7 @@ client.will_set(lwt_topic, payload="(I B ded)")
 
 client.on_connect=on_connect  #bind call back function
 
-client.connect(mqttBroker) 
+# client.connect(mqttBroker) 
 
 def on_message(client, userdata, message):
     #--------------------------------------
