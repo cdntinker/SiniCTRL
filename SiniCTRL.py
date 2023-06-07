@@ -173,7 +173,7 @@ class TOGGLE_WINDOW:
         if state == True:
             self.label = self.toggle1.get_child()
             self.label.set_markup('<b>'+Device1+' - ON </b>')  
-            client.publish("cmnd/"+Device1+"/Power", "on")
+            client.publish("cmnd/"+Device1+"/Power00", "on")
         else:
             self.toggle1.set_label(''+Device1+' - OFF')
             client.publish("cmnd/"+Device1+"/Power", "off")
