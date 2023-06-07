@@ -30,6 +30,11 @@ Device1 = "SiniLink_1"
 Device2 = "SiniLink_2"
 Device3 = "SiniLink_3"
 
+Part_0 = "Power"
+Part_1 = "Power00"
+Part_2 = "Power"
+Part_3 = "Power"
+
 State_0 = "wtf"
 State_1 = "wtf"
 State_2 = "wtf"
@@ -50,16 +55,16 @@ def on_connect(client, userdata, flags, rc):
         print(client_id, "is connected to", mqttBroker)
         #--------------------------------------
         client.subscribe([
-            ("stat/"+Device0+"/Power",0),
-            ("stat/"+Device1+"/Power00",0),
-            ("stat/"+Device2+"/Power",0),
-            ("stat/"+Device3+"/Power",0),
+            ("stat/"+Device0+"/"+Part_0, 0),
+            ("stat/"+Device1+"/"+Part_1, 0),
+            ("stat/"+Device2+"/"+Part_2, 0),
+            ("stat/"+Device3+"/"+Part_3, 0),
             ])
         print('Subscribed to:\n\t{:s}\n\t{:s}\n\t{:s}\n\t{:s}'.format(
-            Device0, 
-            Device1, 
-            Device2, 
-            Device3
+            Device0+" - "+Part_0, 
+            Device1+" - "+Part_1, 
+            Device2+" - "+Part_2, 
+            Device3+" - "+Part_3
             ))
         #--------------------------------------
     else:
@@ -74,13 +79,13 @@ def on_message(client, userdata, message):
     print("  topic:", message.topic)
     print("message:", str(message.payload.decode("utf-8")))
 
-    if(message.topic == "stat/"+Device0+"/Power"):
+    if(message.topic == "stat/"+Device0+"/"+Part_0):
         State_0 = str(message.payload.decode("utf-8"))
-    if(message.topic == "stat/"+Device1+"/Power00"):        # This one is weird because the firmware is a little weird...
+    if(message.topic == "stat/"+Device1+"/"+Part_1):
         State_1 = str(message.payload.decode("utf-8"))
-    if(message.topic == "stat/:+Device2+/Power"):
+    if(message.topic == "stat/"+Device2+"/"+Part_2):
         State_2 = str(message.payload.decode("utf-8"))
-    if(message.topic == "stat/"+Device3+"/Power"):
+    if(message.topic == "stat/"+Device3+"/"+Part_3):
         State_3 = str(message.payload.decode("utf-8"))
     #--------------------------------------
 
@@ -120,19 +125,19 @@ class TOGGLE_WINDOW:
         # a loop.  Maybe build up a set of
         # variables to define the devices
         #--------------------------------------
-        self.toggle0 = Gtk.ToggleButton(label = Device0+' - wtf')
+        self.toggle0 = Gtk.ToggleButton(label = Device0+' - '+State_0)
         self.toggle0.connect('toggled', self.on_toggled0, 'toggle')
         self.toggle0.set_size_request(200, 0)
 
-        self.toggle1 = Gtk.ToggleButton(label = Device1+' - wtf')
+        self.toggle1 = Gtk.ToggleButton(label = Device1+' - '+State_1)
         self.toggle1.connect('toggled', self.on_toggled1, 'toggle')
         self.toggle0.set_size_request(300, 0)
 
-        self.toggle2 = Gtk.ToggleButton(label = Device2+' - wtf')
+        self.toggle2 = Gtk.ToggleButton(label = Device2+' - '+State_2)
         self.toggle2.connect('toggled', self.on_toggled2, 'toggle')
         self.toggle0.set_size_request(200, 0)
 
-        self.toggle3 = Gtk.ToggleButton(label = Device3+' - wtf')
+        self.toggle3 = Gtk.ToggleButton(label = Device3+' - '+State_3)
         self.toggle3.connect('toggled', self.on_toggled3, 'toggle')
         self.toggle0.set_size_request(200, 0)
         #--------------------------------------
@@ -162,10 +167,10 @@ class TOGGLE_WINDOW:
         if state == True:
             self.label = self.toggle0.get_child()
             self.label.set_markup('<b>'+Device0+' - ON </b>')  
-            client.publish("cmnd/"+Device0+"/Power", "on")
+            client.publish("cmnd/"+Device0+"/"+Part_0, "on")
         else:
             self.toggle0.set_label(''+Device0+' - OFF')
-            client.publish("cmnd/"+Device0+"/Power", "off")
+            client.publish("cmnd/"+Device0+"/"+Part_0, "off")
 
     def on_toggled1(self, event, widget):
         state = self.toggle1.get_active()
@@ -173,10 +178,10 @@ class TOGGLE_WINDOW:
         if state == True:
             self.label = self.toggle1.get_child()
             self.label.set_markup('<b>'+Device1+' - ON </b>')  
-            client.publish("cmnd/"+Device1+"/Power00", "on")
+            client.publish("cmnd/"+Device1+"/"+Part_1, "on")
         else:
             self.toggle1.set_label(''+Device1+' - OFF')
-            client.publish("cmnd/"+Device1+"/Power", "off")
+            client.publish("cmnd/"+Device1+"/"+Part_1, "off")
 
     def on_toggled2(self, event, widget):
         state = self.toggle2.get_active()
@@ -184,10 +189,10 @@ class TOGGLE_WINDOW:
         if state == True:
             self.label = self.toggle2.get_child()
             self.label.set_markup('<b>'+Device2+' - ON </b>')  
-            client.publish("cmnd/"+Device2+"/Power", "on")
+            client.publish("cmnd/"+Device2+"/"+Part_2, "on")
         else:
             self.toggle2.set_label(''+Device2+' - OFF')
-            client.publish("cmnd/"+Device2+"/Power", "off")
+            client.publish("cmnd/"+Device2+"/"+Part_2, "off")
 
     def on_toggled3(self, event, widget):
         state = self.toggle3.get_active()
@@ -195,10 +200,10 @@ class TOGGLE_WINDOW:
         if state == True:
             self.label = self.toggle3.get_child()
             self.label.set_markup('<b>'+Device3+' - ON </b>')  
-            client.publish("cmnd/"+Device3+"/Power", "on")
+            client.publish("cmnd/"+Device3+"/"+Part_3, "on")
         else:
             self.toggle3.set_label(''+Device3+' - OFF')
-            client.publish("cmnd/"+Device3+"/Power", "off")
+            client.publish("cmnd/"+Device3+"/"+Part_3, "off")
     #--------------------------------------
 
     def main(self):
