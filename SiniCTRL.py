@@ -100,18 +100,18 @@ def on_message(client, userdata, message):
         State_3 = str(message.payload.decode("utf-8"))
 
     # print('States:\n\t{:s}\n\t{:s}\n\t{:s}\n\t{:s}'.format(
-    #     Device0+" - "+State_0, 
-    #     Device1+" - "+State_1, 
-    #     Device2+" - "+State_2, 
-    #     Device3+" - "+State_3
+    #     Device_0+" - "+State_0, 
+    #     Device_1+" - "+State_1, 
+    #     Device_2+" - "+State_2, 
+    #     Device_3+" - "+State_3
     #     ))
     #--------------------------------------
 
 client = mqtt.Client(client_id)
 client.will_set(lwt_topic, payload="(I B ded)")
 
-client.on_connect=on_connect  #bind call back function
-client.on_message=on_message        #attach function to callback
+client.on_connect=on_connect    #bind call back function
+client.on_message=on_message    #attach function to callback
 
 #------------------------------------------------------------------------------
 # The Window!
