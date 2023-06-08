@@ -26,3 +26,8 @@ At startup, they all show "wtf" by default.
 The first time a button is pressed, an ON command is sent.
 
 This is not optimal...
+
+# SiniCTRL-v2.py
+This is the version I'm beating the hell out of while trying to learn more.
+
+(unlike SiniCTRL.py that's actually my original functioning version...)
