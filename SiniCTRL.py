@@ -119,12 +119,8 @@ client.on_message=on_message    #attach function to callback
 
 class TOGGLE_WINDOW:
 
-    def delete_event(self, widget, event, data=None):
-        print('delete event occurred')
-        return False
-
     def destroy(self, widget, data=None):
-        print('destroy event occurred')
+        print('destroy event occurred (i.e.: Window was closed...)')
         Gtk.main_quit()
 
     #--------------------------------------
@@ -157,7 +153,6 @@ class TOGGLE_WINDOW:
         TheWindow = Gtk.Window()
         TheWindow.set_position(Gtk.WindowPosition.CENTER)
         TheWindow.set_title(WindowTitle)
-        TheWindow.connect('delete_event', self.delete_event)
         TheWindow.connect('destroy', self.destroy)
 
         #--------------------------------------
