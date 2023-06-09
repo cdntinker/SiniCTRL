@@ -22,6 +22,15 @@ mqttBroker ="Skynet"
 
 WindowTitle = "SiniLink CTRLs"
 
+# The device data as a "structure"
+S_Devices = [
+    # Device         Operation   State
+    ["SiniLink_0",   "Power",   "wtf"],
+    ["SiniLink_1",   "Power00", "wtf"],
+    ["SiniLink_2",   "Power",   "wtf"],
+    ["SiniLink_3",   "Power",   "wtf"]
+]
+
 Device_0 = "SiniLink_0"
 Device_1 = "SiniLink_1"
 Device_2 = "SiniLink_2"
